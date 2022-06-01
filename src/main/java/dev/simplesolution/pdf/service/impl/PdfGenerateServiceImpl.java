@@ -1,6 +1,8 @@
 package dev.simplesolution.pdf.service.impl;
 
 import com.lowagie.text.DocumentException;
+
+import dev.simplesolution.pdf.config.BarcodeReplacedElementFactory;
 import dev.simplesolution.pdf.service.PdfGenerateService;
 
 
@@ -36,15 +38,18 @@ public class PdfGenerateServiceImpl implements PdfGenerateService {
         String htmlContent = templateEngine.process(templateName, context);
         try {
         	//final File outputFile = File.createTempFile(fileName, ".pdf");
-            //PDFEncryption pdfEncryption  = new PDFEncryption();
+            PDFEncryption pdfEncryption  = new PDFEncryption();
         	String password= "password@123";
-        	//pdfEncryption.setUserPassword(password.getBytes());
+        	pdfEncryption.setUserPassword(password.getBytes());
             FileOutputStream fileOutputStream = new FileOutputStream(pdfDirectory + pdfFileName);
             ITextRenderer renderer = new ITextRenderer();
-          
+            renderer.getSharedContext().setReplacedElementFactory(
+                    new BarcodeReplacedElementFactory(
+                            renderer.getOutputDevice()
+                    ));
             renderer.setDocumentFromString(htmlContent);
             renderer.layout();
-            //renderer.setPDFEncryption(pdfEncryption);
+            renderer.setPDFEncryption(pdfEncryption);
             renderer.createPDF(fileOutputStream, false);
             renderer.finishPDF();
 
