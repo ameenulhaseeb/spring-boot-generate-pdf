@@ -43,7 +43,9 @@
     </tr>
 </table>
 <br />
-<img th:src='012345678901' type='code128' style='height: 1cm' />
+<!--<img th:src='012345678901' type='EAN' style='height: 1cm' />-->
+<br />
+<img th:src="'Company Name: ' + ${customer.companyName}" type='QRCODE'  style='height: 150px;width:150px' />
 <table class="quotation">
     <tr>
         <th>Item #</th>
